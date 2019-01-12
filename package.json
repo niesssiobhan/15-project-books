@@ -14,9 +14,27 @@
     "cors": "^2.8.4",
     "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
+    "eslint": "^5.12.0",
     "express": "^4.16.2",
+    "jest": "^23.6.0",
     "method-override": "^3.0.0",
+    "node": "^11.6.0",
     "pg": "^7.3.0",
-    "superagent": "^3.8.3"
-  }
+    "superagent": "^3.8.3",
+    "mongodb-memory-server": "^2.9.3",
+    "mongoose": "^5.4.3",
+    "mongoose-schema-jsonschema": "^1.2.1",
+    "morgan": "^1.9.1",
+    "supertest": "^3.3.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niesssiobhan/15-project-books.git"
+  },
+  "bugs": {
+    "url": "https://github.com/niesssiobhan/15-project-books/issues"
+  },
+  "homepage": "https://github.com/niesssiobhan/15-project-books#readme"
 }

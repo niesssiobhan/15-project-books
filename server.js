@@ -3,9 +3,9 @@
 // Application Dependencies
 require('dotenv').config();
 const express = require('express');
-const pg = require('pg');
+// const pg = require('pg');
 const superagent = require('superagent');
-const methodOverride = require('method-override');
+// const methodOverride = require('method-override');
 
 // Application Setup
 const app = express();
