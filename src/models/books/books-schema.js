@@ -16,7 +16,7 @@
 //   description TEXT,
 //   bookshelf_id INT REFERENCES bookshelves(id)
 // );
-const bookshelf = require('./bookshelf-schema.js');
+const bookshelf = require('../bookshelf/bookshelf-schema.js');
 const mongoose = require('mongoose');
 require('mongoose-schema-jsonSchema')(mongoose);
 
@@ -27,14 +27,14 @@ const books = mongoose.Schema({
   isbn: { type:String, required: false},
   image_url: { type: String, required: false},
   description: { type: String, required: false},
-  
+
 },{ toObject: { virtuals:true }, toJSON: { virtuals:true }} );
 
 books.virtual('bookshelf_id', {
   ref: 'bookshelf',
   localField:'bookshelf_id',
   foreignField: 'id',
-  justOne: false,  
+  justOne: false,
 });
 
 books.pre('find', function() {
