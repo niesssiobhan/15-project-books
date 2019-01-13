@@ -3,9 +3,9 @@
 // Application Dependencies
 require('dotenv').config();
 const express = require('express');
-// const pg = require('pg');
+const pg = require('pg');
 const superagent = require('superagent');
-// const methodOverride = require('method-override');
+const methodOverride = require('method-override');
 
 // Application Setup
 const app = express();
@@ -27,7 +27,7 @@ app.use(methodOverride((request, response) => {
     delete request.body._method;
     return method;
   }
-}))
+}));
 
 // Set the view engine for server-side templating
 app.set('view engine', 'ejs');
@@ -65,7 +65,7 @@ function getBooks(request, response) {
       if(results.rows.rowCount === 0) {
         response.render('pages/searches/new');
       } else {
-        response.render('pages/index', {books: results.rows})
+        response.render('pages/index', {books: results.rows});
       }
     })
     .catch(err => handleError(err, response));
@@ -96,7 +96,7 @@ function getBook(request, response) {
       client.query(SQL, values)
         .then(result => response.render('pages/books/show', {book: result.rows[0], bookshelves: shelves.rows}))
         .catch(err => handleError(err, response));
-    })
+    });
 }
 
 function getBookshelves() {
@@ -122,9 +122,9 @@ function createShelf(shelf) {
         return client.query(INSERT, insertValues)
           .then(results => {
             return results.rows[0].id;
-          })
+          });
       }
-    })
+    });
 }
 
 function createBook(request, response) {
@@ -137,7 +137,7 @@ function createBook(request, response) {
       client.query(SQL, values)
         .then(result => response.redirect(`/books/${result.rows[0].id}`))
         .catch(err => handleError(err, response));
-    })
+    });
 
 }
 
