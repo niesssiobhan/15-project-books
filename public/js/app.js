@@ -6,4 +6,4 @@ $('.select-button').on('click', function() {
 
 $('#update-button').on('click', function() {
   $('#update-form').removeClass('hide-me');
-})
+});
