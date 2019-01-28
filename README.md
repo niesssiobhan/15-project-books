@@ -11,7 +11,8 @@
 * [server](https://git.heroku.com/niess-15-lab.git) 
 
 #### Documentation
-* [swagger](http://xyz.com) (API assignments only)
+* [swagger](https://app.swaggerhub.com/apis/niesssiobhan/book-project-lab15/1.0.0) 
+* [json]()
 
 ### Modules
 #### `model-finder.js`
