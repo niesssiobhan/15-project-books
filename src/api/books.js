@@ -5,25 +5,33 @@ const express = require('express');
 const router = express.Router();
 const superagent = require('superagent');
 const modelFinder = require('../middleware/model-finder.js');
+const books = require('../models/books.js');
+const bookshelf = require('../models/bookshelf.js');
 
+const mongoose = require('mongoose');
+const mongooseOptions = {
+  useNewURIParser:true,
+  useCreateIndex:true,
+  useFindandModify:false
+};
+
+mongoose.connect(process.env.MONGO_URI, mongooseOptions);
 
 router.param('model', modelFinder);
-
 router.get('/', getBooks);
-
 router.post('/searches', createSearch);
-// check
 router.get('/searches/new', newSearch);
-// check
 router.get('/api/:model/:id', getBook);
-// check
 router.post('/api/:model', createBook);
-// check
 router.put('/api/:model/:id', updateBook);
-// check
 router.delete('/api/:model/:id', deleteBook);
 
 // HELPER FUNCTION
+/**
+ *
+ * Function that hold objects for the book info
+ * @param {*} info
+ */
 function Book(info) {
   let placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
 
@@ -35,17 +43,31 @@ function Book(info) {
   this.id = info.industryIdentifiers ? `${info.industryIdentifiers[0].identifier}` : '';
 }
 
+/**
+ *
+ * Function to get all books
+ * @param req api request object
+ * @param res api response object
+ * @param next
+ */
 function getBooks(req,res,next){
-  req.model.get()
-    .then(data => {
-      const output = {
-        results: data,
-      };
-      res.status(200).json(output);      
+  books.find({})
+    .then(results => {
+      if(results.length) {
+        res.render('pages/index', {books: results})
+      } else {
+        res.render('pages/searches/new');
+      }
     })
-    .catch(next);              
+    .catch(next)
 }
-
+    
+/**
+ *
+ * Function that creates a seach
+ * @param request api request object
+ * @param response api response object
+ */
 function createSearch(request, response) {
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
@@ -55,41 +77,102 @@ function createSearch(request, response) {
   superagent.get(url)
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
     .then(results => response.render('pages/searches/show', {results: results}))
-    .catch(err => handleError(err, response));
+    .catch(next);
 }
 
+/**
+ *
+ * Function that creates a new search
+ * @param request api request object
+ * @param response api response object
+ */
 function newSearch(request, response) {
   response.render('pages/searches/new');
 }
 
+/**
+ *
+ * Function that gets a new book
+ * @param req api request object
+ * @param res api response object
+ * @param next
+ */
 function getBook(req,res,next){
-  let id = req.params.id;
-  req.model.get(id)
-    .then(res => res.status(200).json(res[0]))
-    .catch(next);
+  books.findById(req.params.id)
+  .then(book => {
+    return bookshelves.find()
+    .then(shelves => res.render('pages/books/show', {book:book, bookshelves:shelves}))
+  })
+  .catch(next);
 }
 
+/**
+ *
+ * Function that creates a book
+ * @param req api request object
+ * @param res api response object
+ * @param next
+ */
 function createBook(req,res,next){
-  console.log('this was hit');
-  console.log(req.model);
-  req.model.post(req.body)
-    .then(res => res.status(200).json(res))
+  createShelf (request.body.bookshelf)
+  .then(shelf => {
+    let record = request.body;
+    record.bookshelf_id = shelf._id;
+    let book = new books(record);
+    book.save()
+    .then(res => res.redirect(`/books/${result._id}`))
     .catch(next);
+  })
 }
 
+/**
+ *
+ *Funtion creates a new bookshelf
+ * @param {*} shelf
+ * @returns
+ */
+function createShelf(shelf) {
+  let normalizedShelf = shelf.toLowerCase();
+  return bookshelves.findOneAndUpdate(
+    {bookshelf: normalizedShelf},
+    {bookshelf: normalizedShelf},
+    {upsert: true, new: true}
+  );
+}
+
+/**
+ *
+ * Function that updates a book
+ * @param req api request object
+ * @param res api response object
+ * @param next
+ */
 function updateBook(req,res,next){
-  req.model.put(req.params.id, req.body)
-    .then(res => res.status(200).json(res))
-    .catch(next);
+  books.findByIdAndUpdate(res.params.id, request.body)
+  .then(res.redirect(`/books/${req.params.id}`))
+  .catch(next)
 }
 
+/**
+ *
+ * Function that deletes a book
+ * @param req api request object
+ * @param res api response object
+ * @param next
+ */
 function deleteBook(req,res,next){
-  req.model.delete(req.params.id)
-    .then(res => res.status(200).json(res))
-    .catch(next);
+  books.findByIdAndDelete(res.params.id, request.body)
+  .then(res.redirect('/'))
+  .catch(next)
 }
 
 // Err Handleing
+/**
+ *
+ * Function that handles errors
+ * @param error
+ * @param response
+ */
 function handleError(error, response) {
   response.render('pages/error', {error: error});
 }

@@ -9,10 +9,8 @@ const notFound = require( './middleware/404.js' );
 
 const bookRouter = require('./api/books.js');
 
-
 // EXPRESS APP
 const app = express();
-
 
 // APP LEVEL MIDDLEWARE
 app.use(cors());
@@ -21,9 +19,11 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
+// Static Routes
+app.use('/docs', express.static('docs'));
+
 // ROUTES
 app.use(bookRouter);
-
 
 // CATCHALLS
 app.use(notFound);
