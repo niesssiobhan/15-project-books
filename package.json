@@ -4,8 +4,8 @@
   "description": "Application that will allow users to upload and review books",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "watch": "nodemon server.js",
+    "start": "node index.js",
+    "watch": "nodemon index.js",
     "test": "jest --verbose --coverage",
     "test-watch": "jets --watchAll --verbose --coverage",
     "jsdoc": "jsdoc -c ./docs/config/jsdoc.config.json"
