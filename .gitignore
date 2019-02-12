@@ -4,7 +4,6 @@ db
 temp 
 data
 .env 
-*.env
 
 ### Vim ###
 # swap
