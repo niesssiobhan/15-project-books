@@ -4,7 +4,6 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const superagent = require('superagent');
-const modelFinder = require('../middleware/model-finder.js');
 const books = require('../models/books.js');
 const bookshelf = require('../models/bookshelf.js');
 
@@ -15,9 +14,8 @@ const mongooseOptions = {
   useFindandModify:false
 };
 
-mongoose.connect(process.env.MONGO_URI, mongooseOptions);
+mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
 
-router.param('model', modelFinder);
 router.get('/', getBooks);
 router.post('/searches', createSearch);
 router.get('/searches/new', newSearch);

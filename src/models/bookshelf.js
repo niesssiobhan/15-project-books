@@ -1,6 +1,6 @@
 'use strict';
 
-const schema = require('../books/books-schema');
+const schema = require('../models/books-schema');
 const Model = require('./model');
 
 /**
